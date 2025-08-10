@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Página Inicial{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Página Inicial</h1>
+    </div>
+
+    {% if user.is_authenticated %}
+        {% if user.is_superuser %}
+            <!-- Conteúdo para Administradores -->
+            <div class="alert alert-success" role="alert">
+                Bem-vindo, Administrador {{ user.username }}!
+            </div>
+            <p>
+                Como administrador, você tem acesso total ao painel de controle. Use a barra lateral para gerenciar produtos, clientes e pedidos.
+            </p>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Gerenciar Produtos</h5>
+                            <p class="card-text">Adicione, edite ou exclua produtos do seu catálogo.</p>
+                            <a href="{% url 'listar_produtos' %}" class="btn btn-primary">Ir para Produtos</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Gerenciar Clientes</h5>
+                            <p class="card-text">Visualize e gerencie as informações dos seus clientes.</p>
+                            <a href="#" class="btn btn-primary">Ir para Clientes</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Gerenciar Pedidos</h5>
+                            <p class="card-text">Acompanhe os pedidos realizados pelos clientes.</p>
+                            <a href="#" class="btn btn-primary">Ir para Pedidos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <!-- Conteúdo para Clientes Comuns -->
+            <div class="alert alert-info" role="alert">
+                Bem-vindo, {{ user.username }}!
+            </div>
+            <p>
+                Aqui você pode ver nossos produtos, fazer compras e acompanhar o status dos seus pedidos.
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Ver Produtos</h5>
+                            <p class="card-text">Confira nosso catálogo completo e adicione itens ao seu carrinho.</p>
+                            <a href="{% url 'listar_produtos' %}" class="btn btn-primary">Ver Produtos</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Meus Pedidos</h5>
+                            <p class="card-text">Acompanhe o status dos seus pedidos recentes.</p>
+                            <a href="#" class="btn btn-primary">Ver Meus Pedidos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% else %}
+        <!-- Conteúdo para Usuários Não Autenticados -->
+        <div class="jumbotron">
+            <h1 class="display-4">Bem-vindo(a) à nossa Loja!</h1>
+            <p class="lead">Faça login para ter acesso a funcionalidades exclusivas, ou crie sua conta para começar a comprar.</p>
+            <hr class="my-4">
+            <p>Clique abaixo para acessar o sistema ou se registrar.</p>
+            <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Fazer Login</a>
+            <a class="btn btn-secondary btn-lg" href="#" role="button">Registrar-se</a>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Produto{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Detalhes do Produto</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            {% if produto.imagem %}
+                <img src="{{ produto.imagem.url }}" class="img-fluid rounded mb-3" alt="{{ produto.nome }}">
+            {% else %}
+                <img src="https://placehold.co/600x400/eeeeee/333333?text=Sem+Imagem" class="img-fluid rounded mb-3" alt="Sem Imagem">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h3>{{ produto.nome }}</h3>
+            <p><strong>Preço:</strong> R$ {{ produto.preco }}</p>
+            <p><strong>Estoque:</strong> {{ produto.estoque }} unidades</p>
+            <hr>
+            <p>{{ produto.descricao }}</p>
+            <div class="mt-4">
+                <a href="{% url 'editar_produto' produto.pk %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'excluir_produto' produto.pk %}" class="btn btn-danger">Excluir</a>
+                <a href="{% url 'listar_produtos' %}" class="btn btn-secondary">Voltar para a lista</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
