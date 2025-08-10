@@ -164,6 +164,7 @@ def finalizar_compra(request):
         return redirect('meus_pedidos')
     return redirect('carrinho')
 
+
 @login_required
 def meus_pedidos(request):
     cliente = get_object_or_404(Cliente, user=request.user)

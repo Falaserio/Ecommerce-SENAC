@@ -30,43 +30,19 @@
     </style>
 </head>
 <body>
-
-    <!-- Header (Cabeçalho) -->
-    <header class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'home' %}">
-                <i class="fas fa-store"></i> Meu E-commerce
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <!-- Links para autenticação -->
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Olá, {{ user.username }}</a>
-                        </li>
-                        <li class="nav-item logout">
-                            <a class="nav-link" href="{% url 'logout' %}">Sair</a>
-                            <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="dropdown-item" style="background: none; border: none; padding: 0; margin: 0; color: inherit; cursor: pointer;">
-                                    Sair
-                                </button>
-                            </form>
-                        </li>
-                        {% if user.is_superuser %}
-                            <li class="nav-item">
-                                <a class="nav-link" href="{% url 'registro_admin' %}">Registrar Admin</a>
-                            </li>
-                        {% endif %}
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
-                        </li>
-                    {% endif %}
-                </ul>
+    <header class="navbar navbar-dark bg-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="{% url 'home' %}">Meu E-commerce</a>
+        <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap d-flex align-items-center">
+                {% if user.is_authenticated %}
+                    <span class="nav-link px-3">Bem-vindo, {{ user.username }}!</span>
+                    <a class="nav-link px-3" href="{% url 'logout' %}">Sair</a>
+                {% else %}
+                    <a class="nav-link px-3" href="{% url 'login' %}">Login</a>
+                {% endif %}
             </div>
         </div>
     </header>
@@ -74,24 +50,19 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar (Barra lateral) -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block sidebar">
-                <div class="position-sticky pt-3">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                <div class="position-sticky pt-3 sidebar-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'home' %}">
-                                Dashboard
+                                Página Inicial
                             </a>
                         </li>
+                        {% if user.is_superuser %}
                         <li class="nav-item">
-                            {% if user.is_superuser %}
-                                <a class="nav-link" href="{% url 'listar_produtos_admin' %}">
-                                    Produtos
-                                </a>
-                            {% else %}
-                                <a class="nav-link" href="{% url 'listar_produtos_cliente' %}">
-                                    Produtos
-                                </a>
-                            {% endif %}
+                            <a class="nav-link" href="{% url 'listar_produtos' %}">
+                                Produtos
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'listar_clientes' %}">
@@ -103,6 +74,23 @@
                                 Pedidos
                             </a>
                         </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'home' %}">
+                                Produtos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'meus_pedidos' %}">
+                                Pedidos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'carrinho' %}">
+                                Carrinho
+                            </a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>
@@ -125,6 +113,5 @@
 
     <!-- Scripts do Bootstrap e outros JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>

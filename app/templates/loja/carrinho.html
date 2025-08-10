@@ -1,36 +1,54 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Meu Carrinho{% endblock %}
+{% block title %}Carrinho de Compras{% endblock %}
 
 {% block content %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Meu Carrinho</h1>
+        <h1 class="h2">Seu Carrinho de Compras</h1>
     </div>
 
-    <div class="row">
-        <div class="col-md-8">
-            {% if not pedido.itempedido_set.all %}
-                <div class="alert alert-info">Seu carrinho está vazio.</div>
-            {% else %}
-                <ul class="list-group mb-3">
-                    {% for item in pedido.itempedido_set.all %}
-                    <li class="list-group-item d-flex justify-content-between lh-sm">
-                        <div>
-                            <h6 class="my-0">{{ item.produto.nome }}</h6>
-                            <small class="text-muted">{{ item.quantidade }} x R$ {{ item.preco_unitario }}</small>
-                        </div>
-                        <span class="text-muted">R$ {{ item.get_total }}</span>
-                    </li>
-                    {% endfor %}
-                    <li class="list-group-item d-flex justify-content-between">
-                        <span>Total (BRL)</span>
-                        <strong>R$ {{ pedido.get_total }}</strong>
-                    </li>
-                </ul>
-                <div class="text-right">
-                    <button class="btn btn-success">Finalizar Compra</button>
-                </div>
-            {% endif %}
+    {% if items %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Produto</th>
+                    <th scope="col">Preço Unitário</th>
+                    <th scope="col">Quantidade</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{ item.produto.nome }}</td>
+                        <td>R$ {{ item.preco_unitario|floatformat:2 }}</td>
+                        <td>{{ item.quantidade }}</td>
+                        <td>R$ {{ item.total_item|floatformat:2 }}</td>
+                        <td>
+                            <form action="{% url 'remover_item_carrinho' item.pk %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-end">
+            <h3>Total: R$ {{ total|floatformat:2 }}</h3>
+            <form action="{% url 'finalizar_compra' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success btn-lg mt-3">Finalizar Pedido</button>
+            </form>
         </div>
-    </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Seu carrinho está vazio.
+        </div>
+        <a href="{% url 'home' %}" class="btn btn-primary">Continuar Comprando</a>
+    {% endif %}
+
 {% endblock %}
