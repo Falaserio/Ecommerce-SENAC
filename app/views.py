@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import logout
-from .models import Produto, Cliente, Pedido, ItemPedido
-from .forms import ProdutoForm, ClienteForm, RegistroForm, AdminRegistroForm
 from django.http import JsonResponse
 import json
+from .models import Produto, Cliente, Pedido, ItemPedido
+from .forms import ProdutoForm, ClienteForm, RegistroForm, AdminRegistroForm
 
 # Teste para verificar se o usuário é um superusuário
 def is_superuser(user):
@@ -17,13 +17,12 @@ def home(request):
     return render(request, 'loja/home.html', {'produtos': produtos})
 
 # CRUD de Produtos (Admin)
-
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
-def listar_produtos(request):
+def listar_produtos_admin(request):
     produtos = Produto.objects.all()
     # Caminho corrigido para o template
-    return render(request, 'loja/produtos.html', {'produtos': produtos})
+    return render(request, 'loja/produtos_admin.html', {'produtos': produtos})
 
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
@@ -32,17 +31,17 @@ def criar_produto(request):
         form = ProdutoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('listar_produtos')
+            return redirect('listar_produtos_admin')
     else:
         form = ProdutoForm()
     # Caminho corrigido para o template
     return render(request, 'loja/criar_produto.html', {'form': form})
 
 @login_required
-def detalhar_produto(request, pk):
+@user_passes_test(is_superuser, login_url='/accounts/login/')
+def detalhar_produto_admin(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
-    # Caminho corrigido para o template
-    return render(request, 'loja/detalhar_produto.html', {'produto': produto})
+    return render(request, 'loja/detalhar_produto_admin.html', {'produto': produto})
 
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
@@ -52,11 +51,10 @@ def editar_produto(request, pk):
         form = ProdutoForm(request.POST, request.FILES, instance=produto)
         if form.is_valid():
             form.save()
-            return redirect('listar_produtos')
+            return redirect('listar_produtos_admin')
     else:
         form = ProdutoForm(instance=produto)
-    # Caminho corrigido para o template
-    return render(request, 'loja/editar_produto.html', {'form': form, 'produto': produto})
+    return render(request, 'loja/editar_produto.html', {'form': form})
 
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
@@ -64,12 +62,17 @@ def excluir_produto(request, pk):
     produto = get_object_or_404(Produto, pk=pk)
     if request.method == 'POST':
         produto.delete()
-        return redirect('listar_produtos')
-    # Caminho corrigido para o template
-    return render(request, 'loja/confirmar_exclusao_produto.html', {'produto': produto})
+        return redirect('listar_produtos_admin')
+    return render(request, 'loja/excluir_produto.html', {'produto': produto})
+
+# Visualização de Produtos para o Cliente
+@login_required
+def listar_produtos_cliente(request):
+    produtos = Produto.objects.all()
+    return render(request, 'loja/produtos_cliente.html', {'produtos': produtos})
+
 
 # CRUD de Clientes (Admin)
-
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
 def listar_clientes(request):
@@ -95,7 +98,7 @@ def criar_cliente(request):
 def detalhar_cliente(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
     # Caminho corrigido para o template
-    return render(request, 'loja/detalhar_clientes.html', {'cliente': cliente})
+    return render(request, 'loja/detalhar_cliente.html', {'cliente': cliente})
 
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
@@ -109,7 +112,7 @@ def editar_cliente(request, pk):
     else:
         form = ClienteForm(instance=cliente)
     # Caminho corrigido para o template
-    return render(request, 'loja/editar_cliente.html', {'form': form, 'cliente': cliente})
+    return render(request, 'loja/editar_cliente.html', {'form': form})
 
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
@@ -118,17 +121,15 @@ def excluir_cliente(request, pk):
     if request.method == 'POST':
         cliente.delete()
         return redirect('listar_clientes')
-    # Caminho corrigido para o template
-    return render(request, 'loja/confirmar_exclusao_cliente.html', {'cliente': cliente})
+    return render(request, 'loja/excluir_cliente.html', {'cliente': cliente})
 
-# Views para o carrinho de compras
+# Views de Pedidos e Carrinho
 @login_required
 def carrinho(request):
     cliente = get_object_or_404(Cliente, user=request.user)
     pedido, _ = Pedido.objects.get_or_create(cliente=cliente, completo=False)
     items = ItemPedido.objects.filter(pedido=pedido)
     context = {'pedido': pedido, 'items': items}
-    # Caminho corrigido para o template
     return render(request, 'loja/carrinho.html', context)
 
 @login_required
@@ -144,7 +145,7 @@ def adicionar_item_carrinho(request, produto_pk):
     if not criado:
         item.quantidade += 1
         item.save()
-
+    
     return JsonResponse({'message': 'Item adicionado ao carrinho!'})
 
 @login_required
@@ -154,38 +155,20 @@ def remover_item_carrinho(request, item_pk):
     return JsonResponse({'message': 'Item removido do carrinho!'})
 
 @login_required
-def atualizar_item_carrinho(request, item_pk, action):
-    item = get_object_or_404(ItemPedido, pk=item_pk)
-    
-    if action == 'adicionar':
-        item.quantidade += 1
-    elif action == 'remover':
-        item.quantidade -= 1
-        if item.quantidade <= 0:
-            item.delete()
-    
-    item.save()
-
-    return JsonResponse({'message': 'Carrinho atualizado!'})
-
-@login_required
 def finalizar_compra(request):
     if request.method == 'POST':
         cliente = get_object_or_404(Cliente, user=request.user)
         pedido = get_object_or_404(Pedido, cliente=cliente, completo=False)
         pedido.completo = True
         pedido.save()
-        return JsonResponse({'message': 'Compra finalizada com sucesso!'})
-    return JsonResponse({'message': 'Método não permitido.'}, status=405)
+        return redirect('meus_pedidos')
+    return redirect('carrinho')
 
-
-# Views para o histórico de pedidos
 @login_required
 def meus_pedidos(request):
     cliente = get_object_or_404(Cliente, user=request.user)
-    pedidos = Pedido.objects.filter(cliente=cliente, completo=True).order_by('-data_pedido')
+    pedidos = Pedido.objects.filter(cliente=cliente, completo=True)
     context = {'pedidos': pedidos}
-    # Caminho corrigido para o template
     return render(request, 'loja/meus_pedidos.html', context)
 
 @login_required
@@ -194,7 +177,6 @@ def detalhar_pedido(request, pk):
     if request.user.is_superuser or pedido.cliente.user == request.user:
         items = ItemPedido.objects.filter(pedido=pedido)
         context = {'pedido': pedido, 'items': items}
-        # Caminho corrigido para o template
         return render(request, 'loja/detalhar_pedido.html', context)
     else:
         return redirect('meus_pedidos')
@@ -202,12 +184,11 @@ def detalhar_pedido(request, pk):
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
 def listar_todos_pedidos(request):
-    pedidos = Pedido.objects.all().order_by('-data_pedido')
+    pedidos = Pedido.objects.all()
     context = {'pedidos': pedidos}
-    # Caminho corrigido para o template
     return render(request, 'loja/listar_todos_pedidos.html', context)
 
-# View de Registro de Usuário
+# View de Registro de Usuário Cliente
 def registro(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
@@ -231,7 +212,7 @@ def registro(request):
     else:
         form = RegistroForm()
     # Caminho corrigido para o template
-    return render(request, 'templates/registro.html', {'form': form})
+    return render(request, 'loja/registro.html', {'form': form})
 
 
 # Nova view para o registro de administradores, acessível sem login prévio
@@ -245,7 +226,7 @@ def registro_admin(request):
             user.is_superuser = True
             user.is_staff = True
             user.save()
-            return redirect('loja/listar_todos_pedidos')
+            return redirect('listar_todos_pedidos')
     else:
         form = AdminRegistroForm()
     # Caminho corrigido para o template

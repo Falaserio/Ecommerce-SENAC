@@ -20,7 +20,8 @@
                         <div class="card-body">
                             <h5 class="card-title">Gerenciar Produtos</h5>
                             <p class="card-text">Adicione, edite ou exclua produtos do seu catálogo.</p>
-                            <a href="{% url 'listar_produtos' %}" class="btn btn-primary">Ir para Produtos</a>
+                            <!-- Corrigindo a URL para a view de admin -->
+                            <a href="{% url 'listar_produtos_admin' %}" class="btn btn-primary">Ir para Produtos</a>
                         </div>
                     </div>
                 </div>
@@ -28,7 +29,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Gerenciar Clientes</h5>
-                            <p class="card-text">Visualize e edite as informações dos seus clientes.</p>
+                            <p class="card-text">Visualize e gerencie as informações de todos os clientes.</p>
                             <a href="{% url 'listar_clientes' %}" class="btn btn-primary">Ir para Clientes</a>
                         </div>
                     </div>
@@ -37,25 +38,28 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Gerenciar Pedidos</h5>
-                            <p class="card-text">Acompanhe e gerencie todos os pedidos realizados na loja.</p>
+                            <p class="card-text">Gerencie os pedidos feitos na loja.</p>
                             <a href="{% url 'listar_todos_pedidos' %}" class="btn btn-primary">Ir para Pedidos</a>
                         </div>
                     </div>
                 </div>
             </div>
         {% else %}
-            <!-- Conteúdo para Clientes Autenticados -->
+            <!-- Conteúdo para Usuários Comuns -->
             <div class="alert alert-info" role="alert">
-                Bem-vindo(a), {{ user.username }}!
+                Bem-vindo, {{ user.username }}!
             </div>
-            <p>Aproveite para conferir nossos produtos ou acompanhar seus pedidos.</p>
+            <p>
+                Confira nossos produtos e faça suas compras.
+            </p>
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Produtos</h5>
                             <p class="card-text">Confira nosso catálogo completo e adicione itens ao seu carrinho.</p>
-                            <a href="{% url 'listar_produtos' %}" class="btn btn-primary">Ver Produtos</a>
+                            <!-- Corrigindo a URL para a view do cliente -->
+                            <a href="{% url 'listar_produtos_cliente' %}" class="btn btn-primary">Ver Produtos</a>
                         </div>
                     </div>
                 </div>
@@ -82,4 +86,5 @@
             <a class="btn btn-warning btn-lg" href="{% url 'registro_admin' %}" role="button">Registrar Admin</a>
         </div>
     {% endif %}
+
 {% endblock %}

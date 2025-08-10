@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from app import views
-# Importa a view 'carrinho' explicitamente
 from app.views import carrinho
+
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
@@ -16,10 +16,13 @@ urlpatterns = [
     path('accounts/registro-admin/', views.registro_admin, name='registro_admin'),
 
     # URLs para o CRUD de Produtos
-    # Nome da URL revertido para 'listar_produtos' para corrigir o erro.
-    path('produtos/', views.listar_produtos, name='listar_produtos'),
+    # Renomeando a URL para admin
+    path('produtos/admin/', views.listar_produtos_admin, name='listar_produtos_admin'),
+    # URL para o cliente
+    path('produtos/', views.listar_produtos_cliente, name='listar_produtos_cliente'),
+
     path('produtos/novo/', views.criar_produto, name='criar_produto'),
-    path('produtos/<int:pk>/', views.detalhar_produto, name='detalhar_produto'),
+    path('produtos/<int:pk>/', views.detalhar_produto_admin, name='detalhar_produto_admin'),
     path('produtos/<int:pk>/editar/', views.editar_produto, name='editar_produto'),
     path('produtos/<int:pk>/excluir/', views.excluir_produto, name='excluir_produto'),
 
@@ -37,6 +40,5 @@ urlpatterns = [
     path('pedidos-admin/', views.listar_todos_pedidos, name='listar_todos_pedidos'),
     path('carrinho/adicionar/<int:produto_pk>/', views.adicionar_item_carrinho, name='adicionar_item_carrinho'),
     path('carrinho/remover/<int:item_pk>/', views.remover_item_carrinho, name='remover_item_carrinho'),
-    path('carrinho/atualizar/<int:item_pk>/<str:action>/', views.atualizar_item_carrinho, name='atualizar_item_carrinho'),
     path('carrinho/finalizar/', views.finalizar_compra, name='finalizar_compra'),
 ]

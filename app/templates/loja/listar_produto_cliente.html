@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Produtos{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Produtos Disponíveis</h1>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for produto in produtos %}
+    <div class="col">
+        <div class="card h-100">
+            {% if produto.imagem %}
+            <img src="{{ produto.imagem.url }}" class="card-img-top" alt="{{ produto.nome }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <img src="https://placehold.co/600x400/E9ECEF/555555?text=Sem+Imagem" class="card-img-top" alt="Sem Imagem" style="height: 200px; object-fit: cover;">
+            {% endif %}
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ produto.nome }}</h5>
+                <p class="card-text">{{ produto.descricao }}</p>
+                <div class="mt-auto">
+                    <p class="card-text"><strong>Preço:</strong> R$ {{ produto.preco|floatformat:2 }}</p>
+                    <p class="card-text"><small class="text-muted">Estoque: {{ produto.estoque }}</small></p>
+                    <a href="{% url 'detalhar_produto' produto.pk %}" class="btn btn-info btn-sm">Detalhes</a>
+                    <button class="btn btn-success btn-sm adicionar-carrinho" data-produto-pk="{{ produto.pk }}">Adicionar ao Carrinho</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Nenhum produto disponível no momento.</p>
+    {% endfor %}
+</div>
+
+<!-- Modal para Mensagens -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageModalLabel">Atenção</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="messageModalBody">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    document.querySelectorAll('.adicionar-carrinho').forEach(button => {
+        button.addEventListener('click', () => {
+            const produtoPk = button.dataset.produtoPk;
+            fetch(`/carrinho/adicionar/${produtoPk}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Falha na requisição. Status: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                document.getElementById('messageModalBody').innerText = data.message;
+                messageModal.show();
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                document.getElementById('messageModalBody').innerText = 'Ocorreu um erro ao adicionar o item ao carrinho.';
+                messageModal.show();
+            });
+        });
+    });
+</script>
+{% endblock %}
