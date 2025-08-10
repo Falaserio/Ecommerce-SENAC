@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Cliente{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Detalhes do Cliente</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ cliente.nome }}</h5>
+            <p class="card-text"><strong>E-mail:</strong> {{ cliente.email }}</p>
+            <p class="card-text"><strong>Telefone:</strong> {{ cliente.telefone }}</p>
+            <p class="card-text"><strong>Endereço:</strong> {{ cliente.endereco }}</p>
+            <hr>
+            <div class="mt-4">
+                <a href="{% url 'editar_cliente' cliente.pk %}" class="btn btn-warning">Editar</a>
+                <a href="{% url 'excluir_cliente' cliente.pk %}" class="btn btn-danger">Excluir</a>
+                <a href="{% url 'listar_clientes' %}" class="btn btn-secondary">Voltar para a lista</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

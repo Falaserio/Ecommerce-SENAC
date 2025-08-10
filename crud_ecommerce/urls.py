@@ -1,12 +1,22 @@
 from django.contrib import admin
 from django.urls import path, include
 from app import views
+# Importa a view 'carrinho' explicitamente
+from app.views import carrinho
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
 
+    # URLs para autenticação
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('accounts/logout/', views.logout_view, name='logout'),
+    path('accounts/registro/', views.registro, name='registro'),
+    path('accounts/registro-admin/', views.registro_admin, name='registro_admin'),
+
     # URLs para o CRUD de Produtos
+    # Nome da URL revertido para 'listar_produtos' para corrigir o erro.
     path('produtos/', views.listar_produtos, name='listar_produtos'),
     path('produtos/novo/', views.criar_produto, name='criar_produto'),
     path('produtos/<int:pk>/', views.detalhar_produto, name='detalhar_produto'),
@@ -20,6 +30,13 @@ urlpatterns = [
     path('clientes/<int:pk>/editar/', views.editar_cliente, name='editar_cliente'),
     path('clientes/<int:pk>/excluir/', views.excluir_cliente, name='excluir_cliente'),
 
-    # URLs de autenticação do Django
-    path('accounts/', include('django.contrib.auth.urls')),
+    # URLs de Pedidos e Carrinho
+    path('carrinho/', views.carrinho, name='carrinho'),
+    path('meus-pedidos/', views.meus_pedidos, name='meus_pedidos'),
+    path('meus-pedidos/<int:pk>/', views.detalhar_pedido, name='detalhar_pedido'),
+    path('pedidos-admin/', views.listar_todos_pedidos, name='listar_todos_pedidos'),
+    path('carrinho/adicionar/<int:produto_pk>/', views.adicionar_item_carrinho, name='adicionar_item_carrinho'),
+    path('carrinho/remover/<int:item_pk>/', views.remover_item_carrinho, name='remover_item_carrinho'),
+    path('carrinho/atualizar/<int:item_pk>/<str:action>/', views.atualizar_item_carrinho, name='atualizar_item_carrinho'),
+    path('carrinho/finalizar/', views.finalizar_compra, name='finalizar_compra'),
 ]

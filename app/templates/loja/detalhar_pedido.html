@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Pedido #{{ pedido.pk }}{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Detalhes do Pedido #{{ pedido.pk }}</h1>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <p><strong>Cliente:</strong> {{ pedido.cliente.nome }}</p>
+            <p><strong>Data:</strong> {{ pedido.data_criacao|date:"d/m/Y H:i" }}</p>
+            <p><strong>Status:</strong> Finalizado</p>
+        </div>
+    </div>
+
+    <h4 class="mt-4">Itens do Pedido</h4>
+    <ul class="list-group mb-3">
+        {% for item in items %}
+        <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+                <h6 class="my-0">{{ item.produto.nome }}</h6>
+                <small class="text-muted">{{ item.quantidade }} x R$ {{ item.preco_unitario }}</small>
+            </div>
+            <span class="text-muted">R$ {{ item.get_total }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="card">
+        <div class="card-body text-right">
+            <strong>Total do Pedido:</strong> <span class="h4">R$ {{ pedido.get_total }}</span>
+        </div>
+    </div>
+
+    <a href="{% url 'meus_pedidos' %}" class="btn btn-secondary mt-3">Voltar para Meus Pedidos</a>
+{% endblock %}

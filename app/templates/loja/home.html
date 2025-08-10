@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-
 {% block title %}Página Inicial{% endblock %}
-
 {% block content %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Página Inicial</h1>
@@ -30,8 +28,8 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Gerenciar Clientes</h5>
-                            <p class="card-text">Visualize e gerencie as informações dos seus clientes.</p>
-                            <a href="#" class="btn btn-primary">Ir para Clientes</a>
+                            <p class="card-text">Visualize e edite as informações dos seus clientes.</p>
+                            <a href="{% url 'listar_clientes' %}" class="btn btn-primary">Ir para Clientes</a>
                         </div>
                     </div>
                 </div>
@@ -39,25 +37,23 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Gerenciar Pedidos</h5>
-                            <p class="card-text">Acompanhe os pedidos realizados pelos clientes.</p>
-                            <a href="#" class="btn btn-primary">Ir para Pedidos</a>
+                            <p class="card-text">Acompanhe e gerencie todos os pedidos realizados na loja.</p>
+                            <a href="{% url 'listar_todos_pedidos' %}" class="btn btn-primary">Ir para Pedidos</a>
                         </div>
                     </div>
                 </div>
             </div>
         {% else %}
-            <!-- Conteúdo para Clientes Comuns -->
+            <!-- Conteúdo para Clientes Autenticados -->
             <div class="alert alert-info" role="alert">
-                Bem-vindo, {{ user.username }}!
+                Bem-vindo(a), {{ user.username }}!
             </div>
-            <p>
-                Aqui você pode ver nossos produtos, fazer compras e acompanhar o status dos seus pedidos.
-            </p>
+            <p>Aproveite para conferir nossos produtos ou acompanhar seus pedidos.</p>
             <div class="row">
                 <div class="col-md-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Ver Produtos</h5>
+                            <h5 class="card-title">Produtos</h5>
                             <p class="card-text">Confira nosso catálogo completo e adicione itens ao seu carrinho.</p>
                             <a href="{% url 'listar_produtos' %}" class="btn btn-primary">Ver Produtos</a>
                         </div>
@@ -68,7 +64,7 @@
                         <div class="card-body">
                             <h5 class="card-title">Meus Pedidos</h5>
                             <p class="card-text">Acompanhe o status dos seus pedidos recentes.</p>
-                            <a href="#" class="btn btn-primary">Ver Meus Pedidos</a>
+                            <a href="{% url 'meus_pedidos' %}" class="btn btn-primary">Ver Meus Pedidos</a>
                         </div>
                     </div>
                 </div>
@@ -80,10 +76,10 @@
             <h1 class="display-4">Bem-vindo(a) à nossa Loja!</h1>
             <p class="lead">Faça login para ter acesso a funcionalidades exclusivas, ou crie sua conta para começar a comprar.</p>
             <hr class="my-4">
-            <p>Clique abaixo para acessar o sistema ou se registrar.</p>
+            <p>Clique abaixo para acessar o sistema, se registrar ou registrar um administrador.</p>
             <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Fazer Login</a>
-            <a class="btn btn-secondary btn-lg" href="#" role="button">Registrar-se</a>
+            <a class="btn btn-secondary btn-lg" href="{% url 'registro' %}" role="button">Registrar-se</a>
+            <a class="btn btn-warning btn-lg" href="{% url 'registro_admin' %}" role="button">Registrar Admin</a>
         </div>
     {% endif %}
-
 {% endblock %}

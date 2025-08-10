@@ -47,9 +47,20 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Olá, {{ user.username }}</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item logout">
                             <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item" style="background: none; border: none; padding: 0; margin: 0; color: inherit; cursor: pointer;">
+                                    Sair
+                                </button>
+                            </form>
                         </li>
+                        {% if user.is_superuser %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'registro_admin' %}">Registrar Admin</a>
+                            </li>
+                        {% endif %}
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'login' %}">Login</a>
@@ -77,12 +88,12 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{% url 'listar_clientes' %}">
                                 Clientes
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{% url 'listar_todos_pedidos' %}">
                                 Pedidos
                             </a>
                         </li>

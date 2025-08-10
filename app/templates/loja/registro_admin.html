@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Registro de Administrador{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Criar Nova Conta de Administrador</h1>
+    </div>
+
+    <form method="post" action="{% url 'registro_admin' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-danger">Registrar Administrador</button>
+    </form>
+{% endblock %}

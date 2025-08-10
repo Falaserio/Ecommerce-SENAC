@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Meus Pedidos{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Meus Pedidos</h1>
+    </div>
+
+    {% if not pedidos %}
+        <div class="alert alert-info">Você ainda não fez nenhum pedido.</div>
+    {% else %}
+        <div class="list-group">
+            {% for pedido in pedidos %}
+            <a href="{% url 'detalhar_pedido' pedido.pk %}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Pedido #{{ pedido.pk }}</h5>
+                    <small>{{ pedido.data_criacao|date:"d/m/Y H:i" }}</small>
+                </div>
+                <p class="mb-1">Total: R$ {{ pedido.get_total }}</p>
+                <small>Status: Finalizado</small>
+            </a>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
