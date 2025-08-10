@@ -20,7 +20,6 @@
                         <div class="card-body">
                             <h5 class="card-title">Gerenciar Produtos</h5>
                             <p class="card-text">Adicione, edite ou exclua produtos do seu catálogo.</p>
-                            <!-- Corrigindo a URL para a view de admin -->
                             <a href="{% url 'listar_produtos_admin' %}" class="btn btn-primary">Ir para Produtos</a>
                         </div>
                     </div>
@@ -29,7 +28,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Gerenciar Clientes</h5>
-                            <p class="card-text">Visualize e gerencie as informações de todos os clientes.</p>
+                            <p class="card-text">Visualize e gerencie os dados de todos os seus clientes.</p>
                             <a href="{% url 'listar_clientes' %}" class="btn btn-primary">Ir para Clientes</a>
                         </div>
                     </div>
@@ -38,19 +37,19 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Gerenciar Pedidos</h5>
-                            <p class="card-text">Gerencie os pedidos feitos na loja.</p>
+                            <p class="card-text">Visualize e acompanhe todos os pedidos feitos na loja.</p>
                             <a href="{% url 'listar_todos_pedidos' %}" class="btn btn-primary">Ir para Pedidos</a>
                         </div>
                     </div>
                 </div>
             </div>
         {% else %}
-            <!-- Conteúdo para Usuários Comuns -->
+            <!-- Conteúdo para Clientes Autenticados -->
             <div class="alert alert-info" role="alert">
-                Bem-vindo, {{ user.username }}!
+                Bem-vindo(a), {{ user.username }}!
             </div>
             <p>
-                Confira nossos produtos e faça suas compras.
+                Confira os produtos em nossa loja ou veja o status dos seus pedidos.
             </p>
             <div class="row">
                 <div class="col-md-6">
@@ -58,7 +57,6 @@
                         <div class="card-body">
                             <h5 class="card-title">Produtos</h5>
                             <p class="card-text">Confira nosso catálogo completo e adicione itens ao seu carrinho.</p>
-                            <!-- Corrigindo a URL para a view do cliente -->
                             <a href="{% url 'listar_produtos_cliente' %}" class="btn btn-primary">Ver Produtos</a>
                         </div>
                     </div>

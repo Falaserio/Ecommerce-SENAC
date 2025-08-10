@@ -60,7 +60,7 @@
                         </li>
                         {% if user.is_superuser %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'listar_produtos' %}">
+                            <a class="nav-link" href="{% url 'listar_produtos_admin' %}">
                                 Produtos
                             </a>
                         </li>
@@ -76,7 +76,7 @@
                         </li>
                         {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'home' %}">
+                            <a class="nav-link" href="{% url 'listar_produtos_cliente' %}">
                                 Produtos
                             </a>
                         </li>
