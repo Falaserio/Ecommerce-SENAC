@@ -226,7 +226,7 @@ def criar_cliente(request):
 @user_passes_test(is_superuser, login_url='/accounts/login/')
 def detalhar_cliente(request, pk):
     cliente = get_object_or_404(Cliente, pk=pk)
-    return render(request, 'loja/detalhar_cliente.html', {'cliente': cliente})
+    return render(request, 'clientes/detalhar_clientes.html', {'cliente': cliente})
 
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
@@ -239,7 +239,7 @@ def editar_cliente(request, pk):
             return redirect('listar_clientes')
     else:
         form = ClienteForm(instance=cliente)
-    return render(request, 'loja/editar_cliente.html', {'form': form})
+    return render(request, 'editar/editar_cliente.html', {'form': form})
 
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')
@@ -248,4 +248,4 @@ def excluir_cliente(request, pk):
     if request.method == 'POST':
         cliente.delete()
         return redirect('listar_clientes')
-    return render(request, 'loja/excluir_cliente.html', {'cliente': cliente})
+    return render(request, 'clientes/excluir_cliente.html', {'cliente': cliente})

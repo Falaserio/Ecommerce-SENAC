@@ -17,9 +17,6 @@
                         <th>ID</th>
                         <th>Cliente</th>
                         <th>Data</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,17 +25,6 @@
                         <td>{{ pedido.pk }}</td>
                         <td>{{ pedido.cliente.nome }}</td>
                         <td>{{ pedido.data_criacao|date:"d/m/Y H:i" }}</td>
-                        <td>R$ {{ pedido.get_total }}</td>
-                        <td>
-                            {% if pedido.completo %}
-                                <span class="badge bg-success">Finalizado</span>
-                            {% else %}
-                                <span class="badge bg-warning text-dark">Em Andamento</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{% url 'detalhar_pedido' pedido.pk %}" class="btn btn-sm btn-outline-info">Detalhes</a>
-                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
