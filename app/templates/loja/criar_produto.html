@@ -6,8 +6,9 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Adicionar Novo Produto</h1>
     </div>
-
-    <form method="post" enctype="multipart/form-data">
+    <div class="product-form-container">
+    <!-- Seu formulário existente aqui -->
+        <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="mb-3">
             <label for="id_nome" class="form-label">Nome:</label>
@@ -36,4 +37,5 @@
             <a href="{% url 'listar_produtos_cliente' %}" class="btn btn-secondary">Voltar para a lista</a>
         {% endif %}
     </form>
+    </div>
 {% endblock %}
