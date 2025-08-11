@@ -24,7 +24,11 @@
             <div class="mt-4">
                 <a href="{% url 'editar_produto' produto.pk %}" class="btn btn-warning">Editar</a>
                 <a href="{% url 'excluir_produto' produto.pk %}" class="btn btn-danger">Excluir</a>
-                <a href="{% url 'listar_produtos' %}" class="btn btn-secondary">Voltar para a lista</a>
+                {% if user.is_superuser %}
+                    <a href="{% url 'listar_produtos_admin' %}" class="btn btn-success">Voltar para a lista</a>
+                {% else %}
+                    <a href="{% url 'listar_produtos_cliente' %}" class="btn btn-success">Voltar para a lista</a>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -50,7 +50,7 @@ def listar_produtos_cliente(request):
 def listar_clientes(request):
     clientes = Cliente.objects.all()
     # Caminho corrigido para o template
-    return render(request, 'loja/clientes.html', {'clientes': clientes})
+    return render(request, 'clientes/clientes.html', {'clientes': clientes})
 
 # ... (outras views)
 
@@ -198,7 +198,7 @@ def editar_produto(request, pk):
             return redirect('listar_produtos_admin')
     else:
         form = ProdutoForm(instance=produto)
-    return render(request, 'loja/editar_produto.html', {'form': form})
+    return render(request, 'editar/editar_produto.html', {'form': form})
 
 @login_required
 @user_passes_test(is_superuser, login_url='/accounts/login/')

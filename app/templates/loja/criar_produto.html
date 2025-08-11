@@ -30,6 +30,10 @@
             <input type="file" name="imagem" id="id_imagem" class="form-control">
         </div>
         <button type="submit" class="btn btn-success">Salvar Produto</button>
-        <a href="{% url 'listar_produtos' %}" class="btn btn-secondary">Cancelar</a>
+        {% if user.is_superuser %}
+            <a href="{% url 'listar_produtos_admin' %}" class="btn btn-secondary">Voltar para a lista</a>
+        {% else %}
+            <a href="{% url 'listar_produtos_cliente' %}" class="btn btn-secondary">Voltar para a lista</a>
+        {% endif %}
     </form>
 {% endblock %}
